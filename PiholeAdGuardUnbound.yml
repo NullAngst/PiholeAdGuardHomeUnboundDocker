@@ -13,9 +13,9 @@ services:
       - "8888:80/tcp"
       # Web UI HTTPS Port (Accessible at https://<host-ip>:4433)
       - "4433:443/tcp"
-      # Optional: Uncomment if using Pi-hole as your DHCP Server
+      # Optional: Comment if you are not using Pi-hole as your DHCP Server
       - "67:67/udp"
-      # Optional: Uncomment if using Pi-hole as your NTP server
+      # Optional: Comment if you are not using Pi-hole as your NTP server
       - "123:123/udp"
     environment:
       TZ: 'America/New_York'

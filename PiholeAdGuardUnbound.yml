@@ -1,0 +1,78 @@
+# Combined Docker Compose for Pi-hole, AdGuard Home, and Unbound
+
+services:
+  # -------------------- Pi-hole Service --------------------
+  pihole:
+    container_name: pihole
+    image: pihole/pihole:latest
+    ports:
+      # Standard DNS queries
+      - "53:53/tcp"
+      - "53:53/udp"
+      # Web UI HTTP Port (Accessible at http://<host-ip>:8888)
+      - "8888:80/tcp"
+      # Web UI HTTPS Port (Accessible at https://<host-ip>:4433)
+      - "4433:443/tcp"
+      # Optional: Uncomment if using Pi-hole as your DHCP Server
+      - "67:67/udp"
+      # Optional: Uncomment if using Pi-hole as your NTP server
+      - "123:123/udp"
+    environment:
+      TZ: 'America/New_York'
+      FTLCONF_webserver_api_password: 'your_secure_password_here' # Set a secure password!
+      FTLCONF_dns_listeningMode: 'all'
+    volumes:
+      - './etc-pihole:/etc/pihole'
+      #- './etc-dnsmasq.d:/etc/dnsmasq.d'
+    cap_add:
+      # Required for DHCP server functionality
+      - NET_ADMIN
+      # Optional: For higher processing priority
+      - SYS_NICE
+    networks:
+      - dns-net
+    restart: unless-stopped
+
+  # -------------------- AdGuard Home Service --------------------
+  adguardhome:
+    container_name: adguardhome
+    image: adguard/adguardhome
+    ports:
+      # Standard DNS (Note: on non-standard port 5353)
+      - "5353:5353/tcp"
+      - "5353:5353/udp"
+      # Web UI and initial setup
+      - "8080:8080/tcp"
+      - "3000:3000/tcp"
+      # Encrypted DNS: DNS-over-TLS
+      - "853:853/tcp"
+      # Encrypted DNS: DNS-over-QUIC
+      - "853:853/udp"
+      # Encrypted DNS: DNS-over-HTTPS
+      - "5443:5443/tcp"
+      - "5443:5443/udp"
+    volumes:
+      - '/var/log/adguardhome:/opt/adguardhome/work'
+      - '/opt/AdGuardHome:/opt/adguardhome/conf'
+    networks:
+      - dns-net
+    restart: unless-stopped
+
+  # -------------------- Unbound Service --------------------
+  unbound:
+    container_name: unbound
+    image: alpinelinux/unbound:latest
+    ports:
+      # Recursive DNS queries (on non-standard port 5335)
+      - "5335:53/tcp"
+      - "5335:53/udp"
+    volumes:
+      - /opt/unbound-docker/unbound.conf:/etc/unbound/unbound.conf:ro
+    networks:
+      - dns-net
+    restart: unless-stopped
+
+# -------------------- Shared Network Definition --------------------
+networks:
+  dns-net:
+    driver: bridge

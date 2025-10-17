@@ -8,7 +8,7 @@ Here is a guide to every port used in the combined Docker Compose file.
 
 - 53:53 (TCP/UDP): This is the standard port for DNS. Your network clients (computers, phones, etc.) will send their domain name queries to Pi-hole on this port. Pi-hole is configured to be the primary DNS server for your network on the standard port.
 
-- 8888:80 (TCP): This maps port 8888 on your host machine to port 80 inside the Pi-hole container. It exposes the Pi-hole web admin interface via HTTP. You can access it at http://<your-docker-host-ip>:8888.
+- 8888:80 (TCP): This maps port 8888 on your host machine to port 80 inside the Pi-hole container. It exposes the Pi-hole web admin interface via HTTP. You can access it at http://your-docker-host-ip:8888.
 
 - 4433:443 (TCP): This maps port 4433 on your host to port 443 in the container, exposing the Pi-hole web admin interface via HTTPS for a secure connection.
 
@@ -20,7 +20,7 @@ Here is a guide to every port used in the combined Docker Compose file.
 
 - 5353:5353 (TCP/UDP): This configuration exposes AdGuard Home's DNS server on a non-standard port, 5353. This avoids conflicting with Pi-hole. For this to work, you must configure AdGuard Home (during its initial setup) to listen for DNS queries on port 5353.
 
-- 3000:3000 (TCP): The initial setup port for AdGuard Home's web interface. When you first launch the container, you will navigate to http://<your-docker-host-ip>:3000 to configure it.
+- 3000:3000 (TCP): The initial setup port for AdGuard Home's web interface. When you first launch the container, you will navigate to http://your-docker-host-ip:3000 to configure it.
 
 - 8080:8080 (TCP): The primary port for the AdGuard Home web admin interface after the initial setup is complete.
 
@@ -32,4 +32,4 @@ Here is a guide to every port used in the combined Docker Compose file.
 
 Unbound
 
-- 5335:5335 (TCP/UDP): This exposes the Unbound recursive DNS resolver on host port 5335. Unbound listens on the standard DNS port 53 inside its container. You would typically configure Pi-hole or AdGuard Home to use Unbound as their upstream DNS server by pointing them to unbound:53 or <docker-host-ip>:5335.
+- 5335:5335 (TCP/UDP): This exposes the Unbound recursive DNS resolver on host port 5335. Unbound listens on the standard DNS port 53 inside its container. You would typically configure Pi-hole or AdGuard Home to use Unbound as their upstream DNS server by pointing them to unbound:5335 or docker-host-ip:5335.

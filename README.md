@@ -32,4 +32,4 @@ Here is a guide to every port used in the combined Docker Compose file.
 
 # Unbound
 
-- 5335:5335 (TCP/UDP): This exposes the Unbound recursive DNS resolver on host port 5335. Unbound listens on the standard DNS port 53 inside its container. You would typically configure Pi-hole or AdGuard Home to use Unbound as their upstream DNS server by pointing them to unbound:5335 or docker-host-ip:5335.
+- 5335:5335 (TCP/UDP): This exposes the Unbound recursive DNS resolver on host port 5335. Unbound listens on port 5335 inside its container. You would typically configure Pi-hole or AdGuard Home to use Unbound as their upstream DNS server by pointing them to unbound:5335 or docker-host-ip:5335.
